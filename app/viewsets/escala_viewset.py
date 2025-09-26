@@ -13,13 +13,18 @@ class EscalaViewSet(viewsets.ModelViewSet):
         if user.perfil == "admin":
             return Escala.objects.all()
         
-        # Para líder: escalas dos departamentos onde é líder
+        # Para líder: escalas onde a pessoa escalada tem funções no departamento do líder
         if user.perfil == "lider":
-            from app.models import Departamento
+            from app.models import PessoaFuncao, Departamento
             departamentos_lider = Departamento.objects.filter(lider=user)
-            return Escala.objects.filter(departamento__in=departamentos_lider)
+            # Pessoas que têm funções nos departamentos do líder
+            pessoas_ids = PessoaFuncao.objects.filter(
+                funcao__departamento__in=departamentos_lider
+            ).values_list('pessoa_id', flat=True).distinct()
+            
+            return Escala.objects.filter(pessoa_id__in=pessoas_ids)
         
-        # Para membro: escalas onde está incluído como pessoa (campo correto: pessoa)
+        # Para membro: escalas onde está incluído como pessoa
         return Escala.objects.filter(pessoa=user)
 
 

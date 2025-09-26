@@ -59,15 +59,19 @@ class IsOwnOrAdmin(BasePermission):
 
 class DepartamentoPermission(BasePermission):
     """
-    Admin pode criar/editar/excluir.
-    Todos podem visualizar.
+    Admin pode criar/editar/excluir/visualizar tudo.
+    Líder pode visualizar todos os departamentos.
+    Membro pode visualizar apenas os departamentos que pertence.
     """
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
             return False
             
+        # Todos os usuários autenticados podem visualizar (GET, HEAD, OPTIONS)
         if request.method in SAFE_METHODS:
             return True
+            
+        # Apenas admin pode criar/editar/excluir departamentos
         return request.user.perfil == "admin"
 
 
@@ -101,7 +105,7 @@ class EscalaPermission(BasePermission):
 
 class PessoaPermission(BasePermission):
     """
-    Admin pode gerenciar todos.
+    Admin pode criar/editar/excluir todas as pessoas.
     Líder pode visualizar pessoas do seu departamento.
     Membro só pode ver/editar os próprios dados.
     """
@@ -113,17 +117,15 @@ class PessoaPermission(BasePermission):
         if request.user.perfil == "admin":
             return True
             
-        # Líder pode visualizar e criar pessoas no seu departamento
-        if request.user.perfil == "lider":
+        # Líder: só pode visualizar (métodos seguros)
+        if request.user.perfil == "lider" and request.method in SAFE_METHODS:
             return True
             
-        # Membro: pode criar se for através do registro (normalmente não) 
-        # ou métodos seguros (GET) para ver próprio perfil
-        # OU se for atualização do próprio usuário (isso será verificado no object_permission)
-        if request.method in SAFE_METHODS or request.method in ['PUT', 'PATCH']:
+        # Membro: pode ver e editar próprio perfil
+        if request.user.perfil == "membro" and request.method in SAFE_METHODS + ['PUT', 'PATCH']:
             return True
             
-        # Membro não pode criar outras pessoas (POST)
+        # Ninguém mais pode criar (POST) ou deletar (DELETE)
         return False
 
     def has_object_permission(self, request, view, obj):
@@ -131,7 +133,7 @@ class PessoaPermission(BasePermission):
             return True
             
         if request.user.perfil == "lider":
-            # Líder pode gerenciar pessoas do seu departamento
+            # Líder pode visualizar pessoas do seu departamento
             from app.models import PessoaFuncao, Departamento
             departamentos_lider = Departamento.objects.filter(lider=request.user)
             # Verifica se a pessoa tem funções no departamento do líder
@@ -140,7 +142,7 @@ class PessoaPermission(BasePermission):
                 funcao__departamento__in=departamentos_lider
             ).exists()
             
-        # Membro só pode acessar os próprios dados (GET, PUT, PATCH)
+        # Membro só pode acessar os próprios dados
         return obj == request.user
 
 

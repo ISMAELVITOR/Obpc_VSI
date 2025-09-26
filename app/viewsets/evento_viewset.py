@@ -12,8 +12,8 @@ class EventoViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user.perfil == "admin":
             return Evento.objects.all()
-        elif user.perfil == "lider":
-            return Evento.objects.filter(departamento=user.departamento)
+        
+        # Tanto líder quanto membro podem ver TODOS os eventos
         return Evento.objects.all()
 
 

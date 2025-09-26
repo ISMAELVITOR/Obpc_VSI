@@ -13,9 +13,9 @@ class DepartamentoViewSet(viewsets.ModelViewSet):
         if user.perfil == "admin":
             return Departamento.objects.all()
         
-        # Para líder: departamentos onde o usuário é líder
+        # Para líder: visualiza todos os departamentos
         if user.perfil == "lider":
-            return Departamento.objects.filter(lider=user)
+            return Departamento.objects.all()
         
         # Para membro: departamentos onde o usuário tem funções
         from app.models import PessoaFuncao
