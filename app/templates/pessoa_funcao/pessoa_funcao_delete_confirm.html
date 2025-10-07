@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Confirmar exclusão</h1>
+<p>Deseja realmente remover o vínculo entre <b>{{ pessoa_funcao.pessoa.nome }}</b> e <b>{{ pessoa_funcao.funcao.nome }}</b>?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Deletar</button>
+    <a href="{% url 'listar_pessoa_funcao' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

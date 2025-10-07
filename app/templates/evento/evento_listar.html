@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Eventos</h1>
+<a href="{% url 'criar_evento' %}" class="btn btn-primary">Novo Evento</a>
+<table class="table table-striped mt-2">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Data Início</th>
+            <th>Hora Início</th>
+            <th>Hora Fim</th>
+            <th>Recorrência</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for e in eventos %}
+        <tr>
+            <td>{{ e.nome }}</td>
+            <td>{{ e.data_inicio }}</td>
+            <td>{{ e.hora_inicio }}</td>
+            <td>{{ e.hora_fim }}</td>
+            <td>{{ e.recorrencia_tipo }}</td>
+            <td>
+                <a href="{% url 'editar_evento' e.id %}" class="btn btn-warning btn-sm">Editar</a>
+                <a href="{% url 'deletar_evento' e.id %}" class="btn btn-danger btn-sm">Deletar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">Nenhum evento cadastrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ titulo }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+        {{ form.nome.label_tag }} 
+        {{ form.nome }}
+        <div class="text-danger">{{ form.nome.errors }}</div>
+    </div>
+    <div class="mb-3">
+        {{ form.departamento.label_tag }}
+        {{ form.departamento }}
+        <div class="text-danger">{{ form.departamento.errors }}</div>
+    </div>
+    <div class="mb-3">
+        {{ form.quantidade_por_evento.label_tag }}
+        {{ form.quantidade_por_evento }}
+        <div class="text-danger">{{ form.quantidade_por_evento.errors }}</div>
+    </div>
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{% url 'listar_funcao' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

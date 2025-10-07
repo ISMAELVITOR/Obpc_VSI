@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}OBPC VSI{% endblock %}</title>
+
+    <!-- Google Font para OBPC VSI -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: #333;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: white;
+            padding: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 10px; /* itens mais próximos da borda */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px; /* barra mais grossa */
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .church-name {
+            font-family: 'Roboto Slab', serif; /* nova fonte */
+            font-size: 1.8rem; /* maior */
+            font-weight: 700;
+            color: white;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            color: #e5e7eb;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgb(239, 68, 68);
+        }
+
+        /* Main Content */
+        main {
+            min-height: calc(100vh - 80px); /* acompanha a nova altura da barra */
+            padding: 0;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+        }
+
+        .menu-overlay.active {
+            display: block;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            overflow-y: auto;
+        }
+
+        .side-menu.active {
+            transform: translateX(0);
+        }
+
+        .menu-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .close-menu:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-nav {
+            padding: 20px;
+        }
+
+        .menu-nav ul {
+            list-style: none;
+        }
+
+        .menu-nav li {
+            margin-bottom: 8px;
+        }
+
+        .menu-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #374151;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .menu-nav a:hover {
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        .menu-nav a.active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 10px;
+            }
+
+            .church-name {
+                font-size: 1.5rem;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .side-menu {
+                width: 100%;
+            }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-left">
+                <button class="menu-btn" id="menuBtn">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <h1 class="church-name">OBPC VSI</h1>
+            </div>
+
+            <div class="header-right">
+                {% if user.is_authenticated %}
+                <div class="user-info">
+                    <span class="user-name">
+                        Olá, 
+                        {% if user.nome %}
+                            {{ user.nome }}
+                        {% elif user.get_full_name %}
+                            {{ user.get_full_name }}
+                        {% else %}
+                            {{ user.email }}
+                        {% endif %}
+                    </span>
+                    <div class="user-avatar">
+                        {% if user.nome %}
+                            {{ user.nome|first|upper }}
+                        {% elif user.get_full_name %}
+                            {{ user.get_full_name|first|upper }}
+                        {% else %}
+                            {{ user.email|first|upper }}
+                        {% endif %}
+                    </div>
+                </div>
+                <form class="logout-form" action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Sair</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Side Menu -->
+    <nav class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <div class="menu-title">Menu</div>
+            <button class="close-menu" id="closeMenuBtn">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="menu-nav">
+            <ul>
+                <li><a href="{% url 'home' %}" class="active">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Início
+                </a></li>
+                <li><a href="{% url 'listar_pessoas' %}">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                    </svg>
+                    Pessoas
+                </a></li>
+                <li><a href="{% url 'listar_funcao' %}">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    Funções
+                </a></li>
+                <li><a href="{% url 'listar_departamento' %}">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    Departamentos
+                </a></li>
+                <li><a href="{% url 'listar_evento' %}">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Eventos
+                </a></li>
+                <li><a href="{% url 'listar_escala' %}">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Escalas
+                </a></li>
+                <li><a href="{% url 'listar_indisponibilidade' %}">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Indisponibilidades
+                </a></li>
+                <li><a href="{% url 'listar_pessoa_funcao' %}">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Pessoas x Funções
+                </a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script>
+        // Menu functionality
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const sideMenu = document.getElementById('sideMenu');
+
+        function openMenu() {
+            menuOverlay.classList.add('active');
+            sideMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            menuOverlay.classList.remove('active');
+            sideMenu.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        if (menuBtn) {
+            menuBtn.addEventListener('click', openMenu);
+        }
+        
+        if (closeMenuBtn) {
+            closeMenuBtn.addEventListener('click', closeMenu);
+        }
+        
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+
+        // Mark current page as active in menu
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUrl = window.location.pathname;
+            const menuLinks = document.querySelectorAll('.menu-nav a');
+            
+            menuLinks.forEach(link => {
+                // Remove active class from all links first
+                link.classList.remove('active');
+                
+                // Check if this link's href matches current URL
+                const linkHref = link.getAttribute('href');
+                if (linkHref === currentUrl || 
+                    (currentUrl === '/' && linkHref === '{% url "home" %}') ||
+                    (currentUrl !== '/' && currentUrl.startsWith(linkHref) && linkHref !== '/')) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
+

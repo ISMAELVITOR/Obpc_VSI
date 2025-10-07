@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Confirmar Exclusão</h2>
+
+<p>Tem certeza que deseja deletar o departamento <strong>{{ departamento.nome }}</strong> liderado por <strong>{{ departamento.lider }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Deletar</button>
+    <a href="{% url 'listar_departamento' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
+

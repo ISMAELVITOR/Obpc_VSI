@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ titulo }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+        {{ form.evento.label_tag }}<br>
+        {{ form.evento }}
+        {{ form.evento.errors }}
+    </div>
+    <div class="mb-3">
+        {{ form.funcao.label_tag }}<br>
+        {{ form.funcao }}
+        {{ form.funcao.errors }}
+    </div>
+    <div class="mb-3">
+        {{ form.pessoa.label_tag }}<br>
+        {{ form.pessoa }}
+        {{ form.pessoa.errors }}
+    </div>
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{% url 'listar_escala' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
+

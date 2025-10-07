@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Escalas</h2>
+<a href="{% url 'criar_escala' %}" class="btn btn-primary mb-2">Nova Escala</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Evento</th>
+            <th>Data do Evento</th>
+            <th>Função</th>
+            <th>Pessoa</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for escala in escalas %}
+        <tr>
+            <td>{{ escala.evento.nome }}</td>
+            <td>{{ escala.evento.data_inicio }}</td>
+            <td>{{ escala.funcao.nome }}</td>
+            <td>{{ escala.pessoa.nome }}</td>
+            <td>
+                <a href="{% url 'editar_escala' escala.id %}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{% url 'deletar_escala' escala.id %}" class="btn btn-sm btn-danger">Deletar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

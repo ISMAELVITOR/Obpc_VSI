@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}{% if editar %}Editar Pessoa{% else %}Criar Pessoa{% endif %}{% endblock %}
+
+{% block content %}
+<h2>{% if editar %}Editar{% else %}Criar{% endif %} Pessoa</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if editar %}Atualizar{% else %}Salvar{% endif %}</button>
+</form>
+<a class="button" href="{% url 'listar_pessoas' %}">Voltar</a>
+{% endblock %}
+

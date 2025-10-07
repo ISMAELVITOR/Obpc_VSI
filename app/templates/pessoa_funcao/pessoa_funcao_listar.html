@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Pessoas e Funções</h1>
+<a href="{% url 'criar_pessoa_funcao' %}" class="btn btn-success">Novo Vínculo</a>
+<table>
+    <thead>
+        <tr>
+            <th>Pessoa</th>
+            <th>Função</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pf in pessoa_funcoes %}
+        <tr>
+            <td>{{ pf.pessoa.nome }}</td>
+            <td>{{ pf.funcao.nome }}</td>
+            <td>
+                <a href="{% url 'editar_pessoa_funcao' pf.id %}">Editar</a> |
+                <a href="{% url 'deletar_pessoa_funcao' pf.id %}">Deletar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">Nenhum vínculo encontrado.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

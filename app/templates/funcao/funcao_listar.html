@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Funções</h2>
+<!-- Atualizado para o nome correto da URL -->
+<a href="{% url 'criar_funcao' %}" class="btn btn-primary mb-2">Nova Função</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Departamento</th>
+            <th>Qtd. por Evento</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for funcao in funcoes %}
+        <tr>
+            <td>{{ funcao.nome }}</td>
+            <td>{{ funcao.departamento.nome }}</td>
+            <td>{{ funcao.quantidade_por_evento }}</td>
+            <td>
+                <a href="{% url 'editar_funcao' funcao.id %}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{% url 'deletar_funcao' funcao.id %}" class="btn btn-sm btn-danger">Deletar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

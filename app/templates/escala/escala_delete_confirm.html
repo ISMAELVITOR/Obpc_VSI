@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Confirmar exclusão</h1>
+<p>Deseja realmente deletar a escala de {{ escala.pessoa.nome }} para {{ escala.funcao.nome }} em {{ escala.data }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Deletar</button>
+    <a href="{% url 'listar_escala' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

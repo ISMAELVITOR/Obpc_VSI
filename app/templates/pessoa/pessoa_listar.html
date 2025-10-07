@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Listagem de Pessoas{% endblock %}
+
+{% block content %}
+<h2>Pessoas</h2>
+<a class="button" href="{% url 'criar_pessoa' %}">Criar nova pessoa</a>
+<table>
+    <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>CPF</th>
+        <th>Perfil</th>
+        <th>Ações</th>
+    </tr>
+    {% for pessoa in pessoas %}
+    <tr>
+        <td>{{ pessoa.nome }}</td>
+        <td>{{ pessoa.email }}</td>
+        <td>{{ pessoa.cpf }}</td>
+        <td>{{ pessoa.get_perfil_display }}</td>
+        <td>
+            <a class="button" href="{% url 'editar_pessoa' pessoa.id %}">Editar</a>
+            <a class="button" href="{% url 'deletar_pessoa' pessoa.id %}">Deletar</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">Nenhuma pessoa cadastrada.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+
+
